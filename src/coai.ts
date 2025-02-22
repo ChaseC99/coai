@@ -4,24 +4,25 @@ export type CoaiAnimation = {
 }
 
 export enum CoaiState {
-    HAPPY,
-    SAD,
-    ANGRY,
-    SICK,
-    POOPY,
+    HAPPY = "happy",
+    MAD = "mad",
+    POOPY = "poopy",
+    SICK = "sick",
+    SHY = "shy",
 }
+
+export const mapStringToCoaiState = (str: string | undefined): CoaiState | undefined => {
+    if (!str) return undefined;
+
+    const lowerStr = str.toLowerCase();
+    return Object.values(CoaiState).find(state => state === lowerStr);
+};
+
 
 export const stateToImages: { [key in CoaiState]: CoaiAnimation } = {
     [CoaiState.HAPPY]: { frames: ["😃", "😄"], description: "happy"},
-    [CoaiState.SAD]: { frames: ["😢", "😞"], description: "sad"},
-    [CoaiState.ANGRY]: { frames: ["😠", "😡"], description: "angry"},
+    [CoaiState.SHY]: { frames: ["😢", "😞"], description: "shy"},
+    [CoaiState.MAD]: { frames: ["😠", "😡"], description: "angry"},
     [CoaiState.SICK]: { frames: ["coi/excited.png"], description: "excited"},
     [CoaiState.POOPY]: { frames: ["coi/anxious.png"], description: "anxious"},
 };
-
-export enum Action {
-    FEED = "feed",
-    PET = "pet",
-    FLUSH = "flush",
-    SCOLD = "scold",
-}

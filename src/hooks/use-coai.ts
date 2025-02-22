@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Action, CoaiState, stateToImages } from "../coai";
+import { CoaiState, stateToImages } from "../coai";
 
 type CoaiImage = {
     url: string;
@@ -10,26 +10,18 @@ const useCoai = () => {
     const [emotion, setEmotion] = useState<CoaiState>(CoaiState.HAPPY);
     const [image, setImage] = useState<CoaiImage>({url: "", description: ""});
 
-    const triggerAction = (action: Action) => {
-        switch (action) {
-            case Action.PET:
-                setEmotion(CoaiState.HAPPY);
-                setImageForState(CoaiState.HAPPY);
-                break;
-            case Action.SCOLD:
-                setEmotion(CoaiState.SAD);
-                setImageForState(CoaiState.SAD);
-                break;
-            default:
-                break;
-        }
-    }
-
+    // Private Functions
     const setImageForState = (state: CoaiState, frame: number = 0) => {
         const {frames, description} = stateToImages[state];
         setImage({url: frames[frame], description});
     }
 
+    const updateState = (state: CoaiState) => {
+        setEmotion(state);
+        setImageForState(state);
+    }
+
+    // State Management
     useEffect(() => {
         var frameIndex = 0;
         const {frames} = stateToImages[emotion];
@@ -46,7 +38,7 @@ const useCoai = () => {
         return () => clearInterval(interval);
     }, [emotion]);
 
-    return { image, triggerAction }
+    return { image, updateState }
 };
 
 export default useCoai;
