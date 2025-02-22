@@ -1,15 +1,17 @@
 import { useBasic, useQuery } from "@basictech/react";
 import "./App.css";
 import { BrowserAI } from "@browserai/browserai";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const deleteCursorIcon = `url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2MEE1RkEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSIzIDYgNSA2IDIxIDYiPjwvcG9seWxpbmU+PHBhdGggZD0iTTE5IDZ2MTRhMiAyIDAgMCAxLTIgMkg3YTIgMiAwIDAgMS0yLTJWNm0zIDBWNGEyIDIgMCAwIDEgMi0yaDRhMiAyIDAgMCAxIDIgMnYyIj48L3BhdGg+PC9zdmc+),auto`;
 
 function App() {
   const { db } = useBasic();
   const emojis = useQuery(() => db.collection("emojis").getAll());
-  const [outputEmoji, setOutputEmoji] = React.useState<string | null>(null);
+  const [outputEmoji, setOutputEmoji] = useState<string | null>(null);
+  const [isListening, setIsListening] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const recognitionRef = useRef<any>(null);
 
   const moodToEmoji: { [key: string]: string } = {
     Happy: "😊",
@@ -53,57 +55,51 @@ function App() {
   };
 
   useEffect(() => {
-    const recognition = new (window as any).webkitSpeechRecognition();
+    // Initialize speech recognition
+    recognitionRef.current = new (window as any).webkitSpeechRecognition();
+    const recognition = recognitionRef.current;
+
     recognition.continuous = false;
     recognition.interimResults = false;
 
     recognition.onstart = () => {
       console.log("Speech recognition service has started.");
+      setIsListening(true);
     };
 
     recognition.onend = () => {
       console.log("Speech recognition service has stopped.");
-      recognition.start();
+      setIsListening(false);
     };
 
-    recognition.onerror = (event) => {
+    recognition.onerror = (event: any) => {
       console.error("Speech recognition error detected: " + event.error);
-    };
-
-    recognition.onspeechstart = () => {
-      console.log("Speech has been detected.");
-    };
-
-    recognition.onspeechend = () => {
-      console.log("Speech has ended.");
-    };
-
-    recognition.oninterimresult = (event) => {
-      const interimTranscript = event.results[0][0].transcript;
-      console.log("Interim result: " + interimTranscript);
+      setIsListening(false);
     };
 
     recognition.onresult = (event: any) => {
-      console.log("HIIII");
       const transcript = event.results[0][0].transcript;
       setOutputEmoji(null); // Clear previous emoji
       if (inputRef.current) {
-        inputRef.current.value = transcript; // Populate input field using ref
-        // Trigger form submission after setting the input value
-        handleSubmit().then(() => {
-          recognition.start(); // Restart speech recognition after emoji is set
-        });
-      } else {
-        recognition.start();
+        inputRef.current.value = transcript;
+        handleSubmit();
       }
     };
 
-    recognition.start();
-
     return () => {
-      //recognition.stop();
+      if (recognition) {
+        recognition.stop();
+      }
     };
   }, []);
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      recognitionRef.current?.start();
+    }
+  };
 
   return (
     <>
@@ -138,7 +134,7 @@ function App() {
         >
           new ✨
         </button>
-        <div className="flex flex-row gap-4 justify-center min-h-[60px] ">
+        <div className="flex flex-row gap-4 justify-center min-h-[60px]">
           {emojis?.map((e: { id: string; value: string }) => (
             <div
               key={e.id}
@@ -152,22 +148,27 @@ function App() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="my-4">
+      <div className="my-4 flex flex-col items-center gap-4">
         <input
           type="text"
           name="inputText"
           placeholder="Enter text"
           className="border p-2 rounded"
-          required
           ref={inputRef}
         />
-        <button
-          type="submit"
-          className="ml-2 p-2 bg-blue-500 text-white rounded"
-        >
-          Generate
-        </button>
-      </form>
+
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={toggleListening}
+            className={`p-2 rounded ${
+              isListening ? "text-black" : "text-black"
+            }`}
+          >
+            {isListening ? "🎤 Stop Listening" : "🎤 Start Listening"}
+          </button>
+        </div>
+      </div>
 
       <div>{outputEmoji && <h2 className="text-4xl">{outputEmoji}</h2>}</div>
 
