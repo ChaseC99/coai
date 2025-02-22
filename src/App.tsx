@@ -1,12 +1,23 @@
 import { useBasic, useQuery } from "@basictech/react";
 import "./App.css";
 import { BrowserAI } from "@browserai/browserai";
+import React from "react";
 
 const deleteCursorIcon = `url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2MEE1RkEiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cG9seWxpbmUgcG9pbnRzPSIzIDYgNSA2IDIxIDYiPjwvcG9seWxpbmU+PHBhdGggZD0iTTE5IDZ2MTRhMiAyIDAgMCAxLTIgMkg3YTIgMiAwIDAgMS0yLTJWNm0zIDBWNGEyIDIgMCAwIDEgMi0yaDRhMiAyIDAgMCAxIDIgMnYyIj48L3BhdGg+PC9zdmc+),auto`;
 
 function App() {
   const { db } = useBasic();
   const emojis = useQuery(() => db.collection("emojis").getAll());
+  const [outputEmoji, setOutputEmoji] = React.useState<string | null>(null);
+
+  const moodToEmoji: { [key: string]: string } = {
+    Happy: "😊",
+    Sad: "😢",
+    Angry: "😠",
+    Excited: "😃",
+    Bored: "😐",
+    Sleepy: "😴",
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,8 +31,26 @@ function App() {
         console.log("Loading:", progress.progress + "%"),
     });
     console.log("Model loaded");
-    const response = await browserAI.generateText(inputText);
-    console.log(response);
+    const response = await browserAI.generateText(
+      `Your human says "${inputText}". What is your mood now?`,
+      {
+        json_schema: {
+          type: "object",
+          properties: {
+            mood: {
+              type: "string",
+              enum: ["Happy", "Sad", "Angry", "Excited", "Bored", "Sleepy"],
+            },
+          },
+        },
+        response_format: {
+          type: "json_object",
+        },
+      }
+    );
+    const parsedResponse = JSON.parse(response);
+    console.log(parsedResponse);
+    setOutputEmoji(moodToEmoji[parsedResponse.mood]);
   };
 
   return (
@@ -86,6 +115,8 @@ function App() {
           Generate
         </button>
       </form>
+
+      <div>{outputEmoji && <h2 className="text-4xl">{outputEmoji}</h2>}</div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-32 max-w-5xl mx-auto px-4">
         <a
