@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 
 interface ListeningButtonProps {
   onTranscript: (transcript: string) => void;
@@ -8,7 +8,7 @@ const ListeningButton: React.FC<ListeningButtonProps> = ({ onTranscript }) => {
   const [isListening, setIsListening] = React.useState(false);
   const recognitionRef = useRef<any>(null);
 
-  useEffect(() => {
+  useMemo(() => {
     // Initialize speech recognition
     recognitionRef.current = new (window as any).webkitSpeechRecognition();
     const recognition = recognitionRef.current;
