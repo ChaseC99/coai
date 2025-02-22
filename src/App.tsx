@@ -15,9 +15,9 @@ function App() {
     Happy: "😊",
     Sad: "😢",
     Angry: "😠",
-    Excited: "😃",
-    Bored: "😐",
-    Sleepy: "😴",
+    Excited: "🥳",
+    Sick: "🥴",
+    Poopy: "💩",
   };
 
   const handleSubmit = async () => {
@@ -28,16 +28,17 @@ function App() {
       onProgress: (progress) =>
         console.log("Loading:", progress.progress + "%"),
     });
+
     console.log("Model loaded");
     const response = await browserAI.generateText(
-      `Your human says "${inputText}". What is your mood now?`,
+      `Your human says "${inputText}". Choose the mood that is MOST appropriate for this: Happy, Sad, Angry, Excited, Sick or Poopy.`,
       {
         json_schema: {
           type: "object",
           properties: {
             mood: {
               type: "string",
-              enum: ["Happy", "Sad", "Angry", "Excited", "Bored", "Sleepy"],
+              enum: ["Happy", "Sad", "Angry", "Excited", "Sick", "Poopy"],
             },
           },
         },
@@ -56,6 +57,32 @@ function App() {
     recognition.continuous = false;
     recognition.interimResults = false;
 
+    recognition.onstart = () => {
+      console.log("Speech recognition service has started.");
+    };
+
+    recognition.onend = () => {
+      console.log("Speech recognition service has stopped.");
+      recognition.start();
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error detected: " + event.error);
+    };
+
+    recognition.onspeechstart = () => {
+      console.log("Speech has been detected.");
+    };
+
+    recognition.onspeechend = () => {
+      console.log("Speech has ended.");
+    };
+
+    recognition.oninterimresult = (event) => {
+      const interimTranscript = event.results[0][0].transcript;
+      console.log("Interim result: " + interimTranscript);
+    };
+
     recognition.onresult = (event: any) => {
       console.log("HIIII");
       const transcript = event.results[0][0].transcript;
@@ -66,13 +93,15 @@ function App() {
         handleSubmit().then(() => {
           recognition.start(); // Restart speech recognition after emoji is set
         });
+      } else {
+        recognition.start();
       }
     };
 
     recognition.start();
 
     return () => {
-      recognition.stop();
+      //recognition.stop();
     };
   }, []);
 
