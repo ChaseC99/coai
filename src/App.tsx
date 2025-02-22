@@ -9,14 +9,17 @@ function App() {
   return (
     <>
       <div style={{display: 'flex', gap: '10px'}}>
-        <button onClick={() => updateState(CoaiState.HAPPY)}>PET</button>
-        <button onClick={() => updateState(CoaiState.MAD)}>SCOLD</button>
+        <button onClick={() => updateState(CoaiState.HAPPY)}>HAPPY</button>
+        <button onClick={() => updateState(CoaiState.ANGRY)}>ANGRY</button>
+        <button onClick={() => updateState(CoaiState.SICK)}>SICK</button>
+        <button onClick={() => updateState(CoaiState.POOPY)}>POOPY</button>
+        <button onClick={() => updateState(CoaiState.EXCITED)}>EXCITED</button>
+        <button onClick={() => updateState(CoaiState.SHY)}>SHY</button>
       </div>
       
       <div style={{ height: '50px' }}></div>
 
-      <h1> {image.url } </h1>
-      <p> {image.description } </p>
+      <img src={image.url} alt={image.description} style={{ width: '200px', height: 'auto', filter: 'invert(1)' }} />
     </>
   )
 }
