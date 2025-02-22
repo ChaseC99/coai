@@ -7,8 +7,8 @@ type CoaiImage = {
 }
 
 const useCoai = () => {
-    const [emotion, setEmotion] = useState<CoaiState>(CoaiState.HAPPY);
-    const [image, setImage] = useState<CoaiImage>({url: "", description: ""});
+    const [emotion, setEmotion] = useState<CoaiState>(CoaiState.NEUTRAL);
+    const [image, setImage] = useState<CoaiImage>({url: "/states/neutral/neutral1.svg", description: "neutral"});
 
     // Private Functions
     const setImageForState = (state: CoaiState, frame: number = 0) => {

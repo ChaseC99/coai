@@ -9,6 +9,7 @@ function App() {
   return (
     <>
       <div style={{display: 'flex', gap: '10px'}}>
+        <button onClick={() => updateState(CoaiState.NEUTRAL)}>NEUTRAL</button>
         <button onClick={() => updateState(CoaiState.HAPPY)}>HAPPY</button>
         <button onClick={() => updateState(CoaiState.ANGRY)}>ANGRY</button>
         <button onClick={() => updateState(CoaiState.SICK)}>SICK</button>

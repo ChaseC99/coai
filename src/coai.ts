@@ -4,6 +4,7 @@ export type CoaiAnimation = {
 }
 
 export enum CoaiState {
+    NEUTRAL = "neutral",
     HAPPY = "happy",
     EXCITED = "excited",
     ANGRY = "angry",
@@ -24,6 +25,7 @@ const generateFrameFiles = (filename: string, count: number) => {
 };
 
 export const stateToImages: { [key in CoaiState]: CoaiAnimation } = {
+    [CoaiState.NEUTRAL]: { frames: generateFrameFiles("/states/neutral/neutral", 2), description: "neutral"},
     [CoaiState.HAPPY]: { frames: generateFrameFiles("/states/happy/happy", 2), description: "happy"},
     [CoaiState.EXCITED]: { frames: generateFrameFiles("/states/excited/excited", 3), description: "excited"},
     [CoaiState.SHY]: { frames: generateFrameFiles("/states/shy/shy", 10), description: "shy"},
