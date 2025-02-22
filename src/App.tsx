@@ -8,8 +8,6 @@ import ListeningButton from "./ListeningButton";
 import { initializeMoodAnalyzer, analyzeMood } from "./moodAnalyzer";
 
 function App() {
-  const { db } = useBasic();
-  const [outputEmoji, setOutputEmoji] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { image, updateState } = useCoai();
@@ -27,8 +25,7 @@ function App() {
 
     setIsLoading(true);
     try {
-      const emoji = await analyzeMood(inputText);
-      setOutputEmoji(emoji);
+      updateState(await analyzeMood(inputText));
     } catch (error) {
       console.error("Error analyzing mood:", error);
     } finally {
@@ -66,7 +63,6 @@ function App() {
         <div style={{ height: "50px" }}></div>
 
         <div>{isLoading && <span>Analyzing mood...</span>}</div>
-        <div>{outputEmoji && <h2 className="text-4xl">{outputEmoji}</h2>}</div>
         <h1> {image.url} </h1>
         <p> {image.description} </p>
       </div>

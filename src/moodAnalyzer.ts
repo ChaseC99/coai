@@ -1,21 +1,10 @@
 // moodAnalyzer.ts
 import { BrowserAI } from "@browserai/browserai";
+import { CoaiAnimation, CoaiState, stateToImages } from "./coai";
 
-export const MOODS = {
-  Happy: { emoji: "😊", description: "Feeling joyful and content" },
-  Sad: { emoji: "😢", description: "Feeling down or unhappy" },
-  Angry: { emoji: "😠", description: "Feeling frustrated or mad" },
-  Excited: { emoji: "🥳", description: "Feeling enthusiastic and energetic" },
-  Sick: { emoji: "🥴", description: "Feeling unwell or ill" },
-  Poopy: { emoji: "💩", description: "Feeling... well, you know" },
-} as const;
+export type Mood = CoaiState;
 
-export type Mood = keyof typeof MOODS;
-export const moodToEmoji = Object.fromEntries(
-  Object.entries(MOODS).map(([mood, { emoji }]) => [mood, emoji])
-) as Record<Mood, string>;
-
-export const MOOD_LIST = Object.keys(MOODS) as Mood[];
+export const MOOD_LIST = Object.keys(stateToImages) as Mood[];
 
 interface MoodAnalyzerResponse {
   mood: Mood;
@@ -36,31 +25,39 @@ export const initializeMoodAnalyzer = async (
   console.log("Model loaded");
 };
 
-export const analyzeMood = async (inputText: string): Promise<string> => {
+export const analyzeMood = async (inputText: string): Promise<CoaiState> => {
   if (!browserAI) {
     await initializeMoodAnalyzer();
   }
 
-  const response = await browserAI!.generateText(
-    `Your human says "${inputText}". Choose the mood that is MOST appropriate for this: ${MOOD_LIST.join(
-      ", "
-    )}.`,
-    {
-      json_schema: {
-        type: "object",
-        properties: {
-          mood: {
-            type: "string",
-            enum: MOOD_LIST,
-          },
+  const prompt = `
+  "${inputText}".
+    Give an explanation of how you feel given the above sentence. How do you feel?
+  `;
+  console.log(prompt);
+
+  const cotResponse = (await browserAI!.generateText(prompt, {
+    max_tokens: 100,
+  })) as String;
+
+  console.log(cotResponse);
+
+  const response = await browserAI!.generateText(cotResponse, {
+    json_schema: {
+      type: "object",
+      properties: {
+        mood: {
+          type: "string",
+          enum: MOOD_LIST,
         },
       },
-      response_format: {
-        type: "json_object",
-      },
-    }
-  );
+    },
+    response_format: {
+      type: "json_object",
+    },
+  });
 
   const parsedResponse = JSON.parse(response) as MoodAnalyzerResponse;
-  return moodToEmoji[parsedResponse.mood];
+  console.log(parsedResponse.mood);
+  return parsedResponse.mood;
 };
