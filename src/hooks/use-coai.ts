@@ -27,11 +27,11 @@ const useCoai = () => {
         const {frames} = stateToImages[emotion];
 
         const interval = setInterval(() => {
+            frameIndex++;
             if (frameIndex >= frames.length) {
                 frameIndex = 0;
             }
             setImageForState(emotion, frameIndex);
-            frameIndex++;
             
         }, 1 * 1000); // Replace x with the desired number of seconds
 
