@@ -48,11 +48,26 @@ function App() {
   // Rest of your component remains the same...
   return (
     <div className={isDarkMode ? "dark-mode" : "light-mode"}>
-      <img
-        src={image.url}
-        alt={image.description}
-        style={{ width: "400px", height: "auto", filter: "invert(1)" }}
-      />
+      <div style={{ position: "relative", width: "500px", height: "auto" }}>
+        <img
+          src="/egg/egg-30.svg"
+          alt="Large Image"
+          style={{ width: "100%", height: "auto" }}
+        />
+        <img
+          src={image.url}
+          alt={image.description}
+          style={{
+            position: "absolute",
+            top: "40%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "300px",
+            height: "auto",
+            filter: "invert(1)",
+          }}
+        />
+      </div>
 
       <div className="flex flex-col items-center gap-4">
         <input
