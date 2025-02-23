@@ -52,7 +52,7 @@ function App() {
         <img
           src="/egg/egg-30.svg"
           alt="Large Image"
-          style={{ width: "100%", height: "auto" }}
+          style={{ width: "100%", height: "auto", opacity: "0.65" }}
         />
         <img
           src={image.url}
