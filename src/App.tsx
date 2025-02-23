@@ -89,6 +89,15 @@ function App() {
         </div>
         <div>{isLoading && <span>Analyzing mood...</span>}</div>
       </div>
+
+      <div style={{ display: "flex", gap: "10px" }}>
+        <button onClick={() => updateState(CoaiState.HAPPY)}>HAPPY</button>
+        <button onClick={() => updateState(CoaiState.ANGRY)}>ANGRY</button>
+        <button onClick={() => updateState(CoaiState.SICK)}>SICK</button>
+        <button onClick={() => updateState(CoaiState.POOPY)}>POOPY</button>
+        <button onClick={() => updateState(CoaiState.EXCITED)}>EXCITED</button>
+        <button onClick={() => updateState(CoaiState.SHY)}>SHY</button>
+      </div>
     </div>
   );
 }
