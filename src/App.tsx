@@ -59,10 +59,10 @@ function App() {
           alt={image.description}
           style={{
             position: "absolute",
-            top: "40%",
+            top: "48%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: "300px",
+            width: "250px",
             height: "auto",
             filter: "invert(1)",
           }}
