@@ -2,8 +2,8 @@
     "name": "Kozy",
     "short_name": "Kozy",
     "display": "standalone",
-    "theme_color": "#242424",
-    "background_color": "#242424",
+    "theme_color": "#fff",
+    "background_color": "#fff",
     "icons": [
         {
             "src": "/icon.png",
