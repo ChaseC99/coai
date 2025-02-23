@@ -9,6 +9,7 @@ import { initializeMoodAnalyzer, analyzeMood } from "./moodAnalyzer";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false); // New state for theme
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { image, updateState } = useCoai();
 
@@ -18,6 +19,10 @@ function App() {
       console.log("Loading:", progress.progress + "%");
     });
   }, []);
+
+  const toggleTheme = () => {
+    setIsDarkMode((prevMode) => !prevMode); // Toggle theme
+  };
 
   const handleSubmit = async () => {
     const inputText = inputRef.current?.value;
@@ -42,7 +47,7 @@ function App() {
 
   // Rest of your component remains the same...
   return (
-    <>
+    <div className={isDarkMode ? "dark-mode" : "light-mode"}>
       <img
         src={image.url}
         alt={image.description}
@@ -59,10 +64,17 @@ function App() {
         />
         <div className="flex gap-2 pt-20">
           <ListeningButton onTranscript={handleTranscript} />
+          <button onClick={toggleTheme}>
+            <img
+              src={isDarkMode ? "/modes/darkMode.svg" : "/modes/lightMode.svg"}
+              alt={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              style={{ width: "20px", height: "20px" }} // Adjust size as needed
+            />
+          </button>
         </div>
         <div>{isLoading && <span>Analyzing mood...</span>}</div>
       </div>
-    </>
+    </div>
   );
 }
 
