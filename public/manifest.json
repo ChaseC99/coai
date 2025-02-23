@@ -1,12 +1,12 @@
 {
-    "name": "Coai",
-    "short_name": "coai",
+    "name": "Kozy",
+    "short_name": "Kozy",
     "display": "standalone",
     "theme_color": "#242424",
     "background_color": "#242424",
     "icons": [
         {
-            "src": "/vite.svg",
+            "src": "/icon.png",
             "sizes": "192x192",
             "type": "image/png"
         }
