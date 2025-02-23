@@ -38,7 +38,7 @@ export const analyzeMood = async (inputText: string): Promise<CoaiState> => {
 
   const cotResponse = (await browserAI!.generateText(prompt, {
     max_tokens: 100,
-  })) as String;
+  })) as string;
 
   console.log(cotResponse);
 
