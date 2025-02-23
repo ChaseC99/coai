@@ -57,7 +57,7 @@ export const analyzeMood = async (inputText: string): Promise<CoaiState> => {
     },
   });
 
-  const parsedResponse = JSON.parse(response) as MoodAnalyzerResponse;
+  const parsedResponse = JSON.parse(response as string) as MoodAnalyzerResponse;
   console.log(parsedResponse.mood);
   return parsedResponse.mood;
 };
