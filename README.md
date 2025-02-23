@@ -1,5 +1,9 @@
-# Coai
-So local, so cozy.
+# Kozy
+cozy digital companion that responds to voice input
+
+so local, so cozy
+
+created by [bonney](https://www.bonneyruan.com/), [chase](www.chasecarnaroli.com), and [james](https://jamesmurdza.com/)
 
 ## create-lofi-app info
 
