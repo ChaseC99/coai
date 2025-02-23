@@ -57,7 +57,7 @@ const ListeningButton: React.FC<ListeningButtonProps> = ({ onTranscript }) => {
       onClick={toggleListening}
       className={`p-2 rounded ${isListening ? "text-black" : "text-black"}`}
     >
-      {isListening ? "🎤 Stop Listening" : "🎤 Start Listening"}
+      {isListening ? "🚫" : "🎤"}
     </button>
   );
 };

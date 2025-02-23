@@ -43,41 +43,25 @@ function App() {
   // Rest of your component remains the same...
   return (
     <>
-      <div className="my-4 flex flex-col items-center gap-4">
+      <img
+        src={image.url}
+        alt={image.description}
+        style={{ width: "400px", height: "auto", filter: "invert(1)" }}
+      />
+
+      <div className="flex flex-col items-center gap-4">
         <input
           type="text"
           name="inputText"
           placeholder="Enter text"
-          className="border p-2 rounded"
+          className="border p-2 rounded hidden"
           ref={inputRef}
         />
-
-        <div className="flex gap-2">
+        <div className="flex gap-2 pt-20">
           <ListeningButton onTranscript={handleTranscript} />
         </div>
-
-        <div style={{ height: "50px" }}></div>
-
         <div>{isLoading && <span>Analyzing mood...</span>}</div>
-        <h1> {image.url} </h1>
-        <p> {image.description} </p>
       </div>
-      <div style={{ display: "flex", gap: "10px" }}>
-        <button onClick={() => updateState(CoaiState.HAPPY)}>HAPPY</button>
-        <button onClick={() => updateState(CoaiState.ANGRY)}>ANGRY</button>
-        <button onClick={() => updateState(CoaiState.SICK)}>SICK</button>
-        <button onClick={() => updateState(CoaiState.POOPY)}>POOPY</button>
-        <button onClick={() => updateState(CoaiState.EXCITED)}>EXCITED</button>
-        <button onClick={() => updateState(CoaiState.SHY)}>SHY</button>
-      </div>
-
-      <div style={{ height: "50px" }}></div>
-
-      <img
-        src={image.url}
-        alt={image.description}
-        style={{ width: "200px", height: "auto", filter: "invert(1)" }}
-      />
     </>
   );
 }
