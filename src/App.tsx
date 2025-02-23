@@ -55,10 +55,6 @@ function App() {
         <div className="flex gap-2">
           <ListeningButton onTranscript={handleTranscript} />
         </div>
-        <div style={{ display: "flex", gap: "10px" }}>
-          <button onClick={() => updateState(CoaiState.HAPPY)}>PET</button>
-          <button onClick={() => updateState(CoaiState.MAD)}>SCOLD</button>
-        </div>
 
         <div style={{ height: "50px" }}></div>
 
